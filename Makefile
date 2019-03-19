@@ -113,6 +113,6 @@ prune:
 	docker system prune -af
 	
 lint:
-	$(RUN_DOCK) "pylint --rcfile=.pylintrc remotestate/* -f parseable"
+	$(RUN_DOCK) "pylint --rcfile=.pylintrc $(PROJECT_NAME)/* -f parseable"
 
 test: lint
