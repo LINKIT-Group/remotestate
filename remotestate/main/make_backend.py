@@ -75,9 +75,13 @@ class Backend():
                              .git/config -> [remote \"origin\"] -> url'))
         git_url_project = git_url_project['origin'].lower()
 
-        # create a clean host_path (remove uri-vars)
-        host_path = re.sub(r'.*:\/\/|.*@|:', '', '/'.join(git_url_project.split('/')[0:-1]))
+        # strip protocol and/ or username addon
+        host_path = re.sub(r'.*:\/\/|.*@', '', '/'.join(git_url_project.split('/')[0:-1]))
+        # for ssh the path is split by a ':', replace by '/'
+        host_path = re.sub(r':', '/', host_path)
+
         git_host = host_path.split('/')[0]
+
         git_path = '.'.join(host_path.split('/')[1:])
 
         self.keyvalue_map['repo_name'] = re.sub(r'\.git$', '', git_url_project.split('/')[-1])
@@ -101,6 +105,7 @@ class BackendAWS(Backend):
     def retrieve_tables(self):
         """Retrieve DynamoDB tables"""
         try:
+            print('Creating or retrieving DynamoDB tables: \"' + self.table_name + '\"')
             self.table = DynamoTable(table_name=self.table_name,
                                      auto_create=True)
         except ValueError as error:
@@ -117,6 +122,8 @@ class BackendAWS(Backend):
             self.retrieve_tables()
 
         try:
+            print('Creating or retrieving S3 Bucket: \"' + self.keyvalue_map['bucket_uri'] \
+                  + '\"')
             self.keyvalue_map['bucket_name'] = \
                 self.table.lookup_s3(bucket_uri=self.keyvalue_map['bucket_uri'],
                                      auto_create=True)

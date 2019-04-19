@@ -25,12 +25,4 @@ def validate_url(url_name):
         return (False, re.sub(' +', ' ', 'url_name contains (reasonably) unsafe \
                 characters, we must be strict to guantuee broad compatibility'))
 
-    # check if the url pattern is matches
-    try:
-        result = urlparse(url_name)
-        if all([result.scheme, result.netloc]) is not True:
-            raise ValueError
-    except ValueError:
-        return (False, 'url_name found incorrect by urlparse library')
-
     return (True, 'Success')
