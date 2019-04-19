@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="remotestate",
-    version="0.80.1",
+    version="0.80.2",
     author="Anthony Potappel",
     author_email="anthony.potappel@gmail.com",
     long_description=long_description,
